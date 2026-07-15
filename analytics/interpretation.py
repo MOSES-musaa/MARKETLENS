@@ -1,4 +1,3 @@
-import pandas as pd
 
 
 def classify_exposure(exposure: float, max_exposure :float) -> str:
@@ -6,6 +5,7 @@ def classify_exposure(exposure: float, max_exposure :float) -> str:
     Classifies the exposure level based on the maximum exposure.
 
     """
+
     strength = exposure / max_exposure
 
     if strength >= 0.80:
@@ -18,17 +18,15 @@ def classify_exposure(exposure: float, max_exposure :float) -> str:
         return "Low"    
 
 
-def interpret_exposure(position: pd.Series, greek: str) -> str:
+def interpret_exposure(greek: str, strength:str, strike: float) -> str:
     """
     Interprets the largest exposure position.
     """
 
-    strike = position["strike"]
-    exposure = position["exposure"]
 
     if greek == "delta":
 
-        if exposure =="Very High":
+        if strength =="Very High":
             return (
                 f"High Dealer Delta Exposure detected at strike {strike}.\n"
                 "Dealers may actively hedge around this level.\n"
@@ -43,7 +41,7 @@ def interpret_exposure(position: pd.Series, greek: str) -> str:
 
     elif greek == "gamma":
 
-        if exposure == "Very High":
+        if strength == "Very High":
             return (
                 f"High Gamma Exposure detected at strike {strike}.\n"
                 "Small price movements may force dealers to hedge aggressively.\n"

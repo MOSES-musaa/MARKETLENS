@@ -1,14 +1,23 @@
 # MarketLens
 
-Institutional Derivatives Analytics Platform
+A Python-based options analytics engine designed to analyze dealer positioning using option Greeks and market structure.
 
-## Objectives
+Features
 
-- Read CME Options Data
-- Calculate Greeks
-- Calculate Gamma Exposure (GEX)
-- Calculate Delta Exposure (DEX)
-- Calculate Max Pain
-- Build an Institutional Trading Dashboard
+✔ Dealer Delta Exposure (DEX)
+✔ Generic Exposure Engine
+✔ Gamma Exposure (GEX)
+✔ Market Metrics
+✔ Volatility Analysis
+✔ Strength Classification
 
-Author: Moses Waihenya.
+Technologies
+
+Python
+Pandas
+Git
+GitHub
+
+Project Status
+
+Actively under development.

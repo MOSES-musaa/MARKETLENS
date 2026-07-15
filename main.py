@@ -19,10 +19,9 @@ from analytics.market_bias import (
     call_put_ratio_sentiment,
     market_summary,
 )
-from analytics.delta_exposure import(
-calculate_dex,
-   print_dex_summary
-   )
+
+from analytics.reports import generate_market_report
+from analytics.presentation import format_report
 
 def main():
     file_path = "Data/raw/sample_gold_options.csv"
@@ -81,9 +80,8 @@ def main():
 
     print(highest_iv_strike(df))
 
-    # Calculate Dealer Delta Exposure
-    df=calculate_dex(df)
-    print_dex_summary(df)
+    report = generate_market_report(df, "delta")
+    print(format_report(report))
 
 if __name__ == "__main__":
     main()
