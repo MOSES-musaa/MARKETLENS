@@ -23,6 +23,8 @@ from analytics.market_bias import (
 from analytics.reports import generate_market_report
 from analytics.presentation import format_report
 
+SUPPORTED_GREEKS = ["delta", "gamma", "theta", "vega", "rho"]
+
 def main():
     file_path = "Data/raw/sample_gold_options.csv"
 
@@ -80,8 +82,12 @@ def main():
 
     print(highest_iv_strike(df))
 
-    report = generate_market_report(df, "delta")
-    print(format_report(report))
+    for greek in SUPPORTED_GREEKS:
+        try:
+            report = generate_market_report(df, greek)
+            print(format_report(report))
+        except Exception as e:
+            print(f"Error generating report for {greek}: {e}")
 
 if __name__ == "__main__":
     main()

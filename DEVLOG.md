@@ -370,3 +370,8 @@ Concepts learned
 - Parameterization
 - Code reuse
 - High Cohesion
+
+### Refactoring the reporting pipeline
+
+Transform the reporting system from a function that generated terminal output into a reusable reporting engine capable of serving multiple consumers (CLI, Dashboard, API, Database).
+

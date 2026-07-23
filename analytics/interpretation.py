@@ -1,4 +1,27 @@
-
+INTERPRETATION_TEMPLATES = {
+    "delta": {
+        "Very High": (
+            "High Dealer Delta Exposure detected at strike {strike}.\n"
+            "Dealers may actively hedge around this level.\n"
+            "Expect stronger market reactions if price approaches this strike."
+        ),
+        "High": (
+            "Moderate Dealer Delta Exposure at strike {strike}.\n"
+            "Dealer hedging pressure is likely to be limited."
+        )
+    },
+    "gamma": {
+        "Very High": (
+            "High Gamma Exposure detected at strike {strike}.\n"
+            "Small price movements may force dealers to hedge aggressively.\n"
+            "Expect increased volatility near this level."
+        ),
+        "High": (
+            "Moderate Gamma Exposure at strike {strike}.\n"
+            "Dealer hedging activity is expected to be relatively mild."
+        )
+    }
+}
 
 def classify_exposure(exposure: float, max_exposure :float) -> str:
     """
@@ -22,37 +45,7 @@ def interpret_exposure(greek: str, strength:str, strike: float) -> str:
     """
     Interprets the largest exposure position.
     """
-
-
-    if greek == "delta":
-
-        if strength =="Very High":
-            return (
-                f"High Dealer Delta Exposure detected at strike {strike}.\n"
-                "Dealers may actively hedge around this level.\n"
-                "Expect stronger market reactions if price approaches this strike."
-            )
-
-        else:
-            return (
-                f"Moderate Dealer Delta Exposure at strike {strike}.\n"
-                "Dealer hedging pressure is likely to be limited."
-            )
-
-    elif greek == "gamma":
-
-        if strength == "Very High":
-            return (
-                f"High Gamma Exposure detected at strike {strike}.\n"
-                "Small price movements may force dealers to hedge aggressively.\n"
-                "Expect increased volatility near this level."
-            )
-
-        else:
-            return (
-                f"Moderate Gamma Exposure at strike {strike}.\n"
-                "Dealer hedging activity is expected to be relatively mild."
-            )
-
-    else:
-        return "Unknown exposure type."
+    template = INTERPRETATION_TEMPLATES[greek][strength]
+    if template is None:
+        return "No interpretation available for this Greek."
+    return template.format(strike=str(strike), strength=strength)
