@@ -22,8 +22,8 @@ from analytics.market_bias import (
 
 from analytics.reports import generate_market_report
 from analytics.presentation import format_report
+from config.settings import SUPPORTED_GREEKS
 
-SUPPORTED_GREEKS = ["delta", "gamma", "theta", "vega", "rho"]
 
 def main():
     file_path = "Data/raw/sample_gold_options.csv"

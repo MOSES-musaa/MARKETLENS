@@ -2,8 +2,9 @@
 calculates exposure for any option chain
 """
 import pandas as pd
+from config.settings import CONTRACT_SIZE
 
-def calculate_exposure(df: pd.DataFrame,greek:str, contract_size: int = 100) -> pd.DataFrame:
+def calculate_exposure(df: pd.DataFrame,greek:str, contract_size: int = CONTRACT_SIZE) -> pd.DataFrame:
 
     """
     Calculates exposure for every strike.
