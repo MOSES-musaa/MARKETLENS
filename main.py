@@ -1,5 +1,5 @@
 from collectors.csv_loader import load_csv
-from core.validator import validate_dataframe
+from core.validator import validate_option_chain
 from analytics.option_chain import (
     total_call_open_interest,
     total_put_open_interest,
@@ -23,6 +23,7 @@ from analytics.market_bias import (
 from analytics.reports import generate_market_report
 from analytics.presentation import format_report
 from config.settings import SUPPORTED_GREEKS
+from config.settings import EXPOSURE_REQUIRED_COLUMNS
 
 
 def main():
@@ -32,8 +33,7 @@ def main():
     print("\nColumns in DataFrame:")
     print(df.columns.tolist())
 
-    validate_dataframe(df)
-
+    df = validate_option_chain(df, EXPOSURE_REQUIRED_COLUMNS)
     print("\nPreview")
     print(df.head())
 

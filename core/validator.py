@@ -1,25 +1,33 @@
+
 def validate_dataframe(df):
     """
-    Prints basic information about a DataFrame.
+    validates the given dataframe to ensure it has the expected structure and data types
     """
 
-    print("\n========== DATA VALIDATION ==========")
+def validate_not_empty(df):
+    """
+    ensures that the option chain contains data
+    """
+    if df.empty:
+        raise ValueError("Option chain is empty")
+    return df
 
-    print(f"\nRows: {df.shape[0]}")
-    print(f"Columns: {df.shape[1]}")
+def validate_required_columns(df, required_columns):
+    """
+    ensures that the option chain contains the required columns
+    """
+    missing_columns = [
+        column for column in required_columns
+          if column not in df.columns]
+    if missing_columns:
+        raise ValueError(f"Option chain is missing required columns: {', '.join(missing_columns)}")
+    return df
 
-    print("\nColumn Names:")
 
-    for column in df.columns:
-        print(f"  • {column}")
-
-    print("\nData Types:")
-    print(df.dtypes)
-
-    print("\nMissing Values:")
-    print(df.isnull().sum())
-
-    print("\nSummary Statistics:")
-    print(df.describe())
-
-    print("\n====================================")
+def validate_option_chain(df, required_columns):
+    """
+    runs all the validation checks on the option chain dataframe
+    """
+    validate_not_empty(df)
+    validate_required_columns(df, required_columns)
+    return df

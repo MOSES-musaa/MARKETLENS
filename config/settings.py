@@ -2,4 +2,11 @@
 
 CONTRACT_SIZE = 100
 
-SUPPORTED_GREEKS = ["delta", "gamma", "theta", "vega", "rho"]
+SUPPORTED_GREEKS = ["delta","gamma"]
+
+BASE_REQUIRED_COLUMNS=["strike","call_oi","put_oi",]
+
+EXPOSURE_REQUIRED_COLUMNS = (BASE_REQUIRED_COLUMNS + SUPPORTED_GREEKS)
+
+VOLATILITY_REQUIRED_COLUMNS = (BASE_REQUIRED_COLUMNS + ["call_iv","put_iv",])
+
