@@ -1,6 +1,7 @@
 from collectors.csv_loader import load_csv
 from core.validator import validate_option_chain
 from core.processor import process_option_chain
+from collectors.csv_writer import save_processed_option_chain
 from analytics.option_chain import (
     total_call_open_interest,
     total_put_open_interest,
@@ -36,6 +37,7 @@ def main():
 
     df = validate_option_chain(df, EXPOSURE_REQUIRED_COLUMNS)
     df = process_option_chain(df)
+    save_processed_option_chain(df, "data/processed/processed_option_chain.csv")
     print("\nPreview")
     print(df.head())
 

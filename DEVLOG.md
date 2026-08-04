@@ -397,3 +397,16 @@ A reliable analytics engine begins with reliable data. Before any analysis is pe
 As marketlens keeps on growing our data needs to be cleaned before being pushed down the pipeline
 for analysis. The Processing engine will handle that performing sorting, resetting dataframe index
 all to ensure that data enters the analysis engine in the right manner.
+
+### Adding a new module csv_writer.py
+
+The purpose of the module is to ensure data persistence. After processing, the output which is then
+passed down the pipeline for analysis is consistent. The orchestrator can also decide whether to save the newly created file to the desired file path.
+
+### Concepts Learned (Day 11)
+
+- Separation of Lifecycle - Each module owns one stage of the data lifecycle
+- Control flow vs Business Logic - Business logic says how to process an Option Chain while control flow asks what sequence of steps should happen today.
+- The Orchestrator Owns the Workflow - Individual modules perform specialized tasks. The orchestrator decides when, if and what order these tasks are to be executed.
+- ETL-style flow - Extract, Transform, Load.
+- Side effects belong at the edges.
