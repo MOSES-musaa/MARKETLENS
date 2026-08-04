@@ -364,7 +364,7 @@ This violated DRY.
 
 The new implementation accepts any Greek as a parameter.
 
-Concepts learned
+### Concepts learned
 
 - Vectorization
 - Parameterization
@@ -375,3 +375,25 @@ Concepts learned
 
 Transform the reporting system from a function that generated terminal output into a reusable reporting engine capable of serving multiple consumers (CLI, Dashboard, API, Database).
 
+### DAY 10
+
+### Redesigning the data ingestion engine
+
+A reliable analytics engine begins with reliable data. Before any analysis is performed, the ingestion layer must ensure that the dataset is complete, valid, and suitable for downstream processing. By validating the data early, the system prevents invalid datasets from propagating through the analytics pipeline, making the entire application more robust and easier to maintain.
+
+### Concepts Learned
+
+- Don't hardcode knowledge - if something is likely to change don't bury it inside the function that uses it
+
+-Derive,don't Duplicate
+-Policy - what should happen
+-Mechanism- How it should happen
+-Separation Of Concerns
+
+### DAY 11
+
+### Adding data processing engine
+
+As marketlens keeps on growing our data needs to be cleaned before being pushed down the pipeline
+for analysis. The Processing engine will handle that performing sorting, resetting dataframe index
+all to ensure that data enters the analysis engine in the right manner.
