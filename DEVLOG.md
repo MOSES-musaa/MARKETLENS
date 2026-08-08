@@ -410,3 +410,8 @@ passed down the pipeline for analysis is consistent. The orchestrator can also d
 - The Orchestrator Owns the Workflow - Individual modules perform specialized tasks. The orchestrator decides when, if and what order these tasks are to be executed.
 - ETL-style flow - Extract, Transform, Load.
 - Side effects belong at the edges.
+
+### DAY 12
+
+- Building a test suite to protect all the architectural decisions implemented.
+- Reinforcing the engineering principles implemented.
