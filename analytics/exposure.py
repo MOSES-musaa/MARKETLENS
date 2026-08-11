@@ -28,22 +28,31 @@ def calculate_exposure(df: pd.DataFrame,greek:str, contract_size: int = CONTRACT
     )
 
     return result
+
 #calculate the largest exposure for a given greek
 
-def largest_exposure(df: pd.DataFrame, greek: str) -> pd.Series:
+def largest_exposure(df: pd.DataFrame) -> pd.Series:
     """
     Returns the strike with the largest exposure.
     """
+    if df["exposure"].isna().all():
+        raise ValueError("cannot determine largest exposure."
+                         " All exposure values are missing.")
 
     index = df["exposure"].idxmax()
 
     return df.loc[index]
 
 #calculates the smallest exposure for a given greek
-def smallest_exposure(df: pd.DataFrame, greek: str) -> pd.Series:
+def smallest_exposure(df: pd.DataFrame) -> pd.Series:
     """
     Returns the strike with the smallest exposure.
     """
+
+    if df["exposure"].isna().all():
+        raise ValueError("" \
+        "cannot determine smallest exposure."
+        " All exposure values are missing.")
 
     index = df["exposure"].idxmin()
 

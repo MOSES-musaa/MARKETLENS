@@ -1,6 +1,7 @@
+
 import pandas as pd
 import pytest
-from analytics.exposure import calculate_exposure
+from analytics.exposure import calculate_exposure, largest_exposure, smallest_exposure
 
 def test_calculate_delta_exposure():
     """delta should equal :
@@ -59,4 +60,117 @@ def test_invalid_greek_raise_value_error():
             greek="Theta",
             )
         
-     
+"""EXPOSURE RELATED TESTS"""
+def test_largest_exposure_returns_row_with_highest_exposure():
+    """Ensure that the largest_exposure function returns the row with the highest exposure."""
+    df = pd.DataFrame({
+        "strike": [4000, 4100, 4050],
+        "exposure": [200_000, 300_000, 100_000]
+    })
+
+    result = largest_exposure(df,)
+
+    expected = pd.Series({
+        "strike": 4100,
+        "exposure": 300_000
+    },)
+
+    pd.testing.assert_series_equal(
+        result[["strike", "exposure"]],
+          expected,
+          check_names=False)
+
+def test_largest_exposure_returns_highest_exposure():
+    df= pd.DataFrame({
+        "strike": [4000, 4100, 4050],
+        "exposure": [200_000, 300_000, 100_000]
+    })
+    result = largest_exposure(df)
+    assert result["strike"] == 4100
+    assert result["exposure"] == 300_000
+
+def test_smallest_exposure_returns_row_smallest_exposure():
+    df = pd.DataFrame({
+        "strike": [4000, 4100, 4050],
+        "exposure": [200_000, 300_000, 100_000]
+    })  
+    result = smallest_exposure(df)
+    assert result["strike"] == 4050
+    assert result["exposure"] == 100_000
+
+def test_smallest_exposure_handles_negative_values():
+    df = pd.DataFrame({
+        "strike": [4000, 4100, 4050],
+        "exposure": [200_000, -300_000, 100_000]
+    })
+
+    result = smallest_exposure(df)
+
+    assert result["strike"] == 4100
+    assert result["exposure"] == -300_000
+
+def test_largest_exposure_returns_first_occurrence_of_max_exposure():
+    df = pd.DataFrame({
+        "strike": [4000, 4100, 4050, 4200],
+        "exposure": [200_000, 300_000, 300_000, 100_000]
+    })
+
+    result = largest_exposure(df)
+
+    assert result["strike"] == 4100
+    assert result["exposure"] == 300_000
+
+def test_smallest_exposure_returns_first_occurrence_of_min_exposure():
+    df = pd.DataFrame({
+        "strike": [4000, 4100, 4050, 4200],
+        "exposure": [200_000, 100_000, 100_000, 300_000]
+    })
+
+    result = smallest_exposure(df)
+
+    assert result["strike"] == 4100
+    assert result["exposure"] == 100_000
+
+def test_smallest_exposure_handles_zero():
+    df= pd.DataFrame({
+        "strike": [4000, 4100, 4050],
+        "exposure":[500_000,0,200_000],
+    })
+    result = smallest_exposure(df)
+    assert result["strike"] == 4100
+    assert result["exposure"] == 0
+
+def test_smallest_exposure_ignores_nan_values():
+    df = pd.DataFrame({
+        "strike": [4000, 4100, 4050],
+        "exposure": [200_000, float('nan'), 100_000]
+    })
+
+    result = smallest_exposure(df)
+
+    assert result["strike"] == 4050
+    assert result["exposure"] == 100_000
+
+def test_smallest_exposure_rejects_all_nan_values():
+    df = pd.DataFrame({
+        "strike": [4000, 4100, 4050],
+        "exposure": [float('nan'), float('nan'), float('nan')]
+    })
+
+    with pytest.raises(ValueError) as exc_info:
+        smallest_exposure(df)
+
+        assert str(exc_info.value) == "cannot determine smallest exposure."
+        " All exposure values are missing."
+
+def test_largest_exposure_rejects_all_nan_values():
+    df = pd.DataFrame({
+        "strike": [4000, 4100, 4050],
+        "exposure": [float('nan'), float('nan'), float('nan')]
+    })
+
+    with pytest.raises(ValueError) as exc_info:
+        largest_exposure(df)
+
+        assert str(exc_info.value) == "cannot determine largest exposure."
+        " All exposure values are missing."

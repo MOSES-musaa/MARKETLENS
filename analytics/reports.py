@@ -13,9 +13,9 @@ def generate_market_report(df, greek):
 
     result = calculate_exposure(df, greek)
 
-    largest = largest_exposure(result, greek)
+    largest = largest_exposure(result)
 
-    smallest = smallest_exposure(result, greek)
+    smallest = smallest_exposure(result)
 
     max_exposure = result["exposure"].max()
 
