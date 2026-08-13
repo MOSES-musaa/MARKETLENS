@@ -1,6 +1,6 @@
 import pandas as pd
+import pytest
 from analytics.reports import generate_market_report
-
 def test_generate_market_report_returns_expected_report():
     df= pd.DataFrame({
         "strike": [100, 105, 110],
@@ -20,3 +20,55 @@ def test_generate_market_report_returns_expected_report():
 
     assert result["strength"] == "Very High"
     assert result["interpretation"] is not None
+
+def test_generate_market_report_returns_correct_smallest_exposure():
+    df = pd.DataFrame({
+        "strike": [100, 105, 110],
+        "gamma": [0.1, 0.2, 0.3],
+        "call_oi": [1000, 1500, 2000],
+    })
+
+    result = generate_market_report(df, "gamma")
+
+    assert result["smallest"]["strike"] == 100
+    assert result["smallest"]["exposure"] == 10000
+
+def test_generate_market_report_classifies_largest_exposure():
+    df = pd.DataFrame({
+        "strike": [100, 105, 110],
+        "gamma": [0.1, 0.2, 0.3],
+        "call_oi": [1000, 1500, 2000],
+    })
+
+    result = generate_market_report(df, "gamma")
+
+    assert result["strength"] == "Very High"
+
+def test_generate_market_report_interprets_largest_exposure():
+    df = pd.DataFrame({
+        "strike": [100, 105, 110],
+        "gamma": [0.1, 0.2, 0.3],
+        "call_oi": [1000, 1500, 2000],
+    })
+
+    result = generate_market_report(df, "gamma")
+
+    assert result["interpretation"] is not None
+    assert "110" in result["interpretation"]
+    assert "High" in result["interpretation"]
+
+
+def test_generate_market_report_rejects_unsupported_greek():
+    df = pd.DataFrame({
+        "strike" : [100,110,120],
+        "gamma" :[0.1,0.2,0.3],
+        "call_oi":[1000,1500,2000]
+    })
+
+    with pytest.raises(ValueError) as exc_info:
+        generate_market_report(df, "vega")
+
+        assert str(exc_info.value) ==(
+            "Unsupported greek 'vega'."
+            "Supported greeks are :delta, gamma"
+        )

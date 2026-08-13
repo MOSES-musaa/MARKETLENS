@@ -8,27 +8,40 @@ INTERPRETATION_TEMPLATES = {
         "High": (
             "Moderate Dealer Delta Exposure at strike {strike}.\n"
             "Dealer hedging pressure is likely to be limited."
-        )
+        ),
+        "Moderate":(
+            "Moderate Dealer delta Exposure detected at strike {strike}.\n"
+             "Dealer hedging activity may have a noticeable influence around this level"
+                ),
+        "Low":(
+            "Low dealer delta Exposure detected at strike {strike}.\n"
+            "Limited dealer hedging influence is expected around this level"
+                )
     },
     "gamma": {
         "Very High": (
-            "High Gamma Exposure detected at strike {strike}.\n"
+            "Very High Gamma Exposure detected at strike {strike}.\n"
             "Small price movements may force dealers to hedge aggressively.\n"
             "Expect increased volatility near this level."
         ),
         "High": (
-            "Moderate Gamma Exposure at strike {strike}.\n"
+            "High Gamma Exposure at strike {strike}.\n"
             "Dealer hedging activity is expected to be relatively mild."
+        ),
+        "Moderate":(
+            "Moderate Gamma Exposure detected at strike {strike}.\n"
+            "Dealer hedging activity may have a noticeable influence around this level"
+        ),
+        "Low":(
+            "Low Gamma Exposure detected at strike {strike}.\n"
+            "Limited dealer hedging influence is expected around this level"
         )
     }
 }
 
 def classify_exposure(exposure: float, max_exposure :float) -> str:
     """
-    Classifies the exposure level based on the maximum exposure.
-
-    """
-
+    Classifies the exposure level based on the maximum exposure. """
     strength = exposure / max_exposure
 
     if strength >= 0.80:
@@ -40,12 +53,23 @@ def classify_exposure(exposure: float, max_exposure :float) -> str:
     else:
         return "Low"    
 
-
 def interpret_exposure(greek: str, strength:str, strike: float) -> str:
     """
     Interprets the largest exposure position.
     """
-    template = INTERPRETATION_TEMPLATES[greek][strength]
+    greek_templates = INTERPRETATION_TEMPLATES.get(greek)
+
+    if greek_templates is None:
+        raise ValueError(
+            f"No Interpretation template available for greek '{greek}'."
+        )
+    template =greek_templates.get(strength)
+
     if template is None:
-        return "No interpretation available for this Greek."
-    return template.format(strike=str(strike), strength=strength)
+        return "No interpretation available for this exposure strength."
+
+    return template.format(
+        strike= str(strike),
+        strength=strength
+    )
+     
