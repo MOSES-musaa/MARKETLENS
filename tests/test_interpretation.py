@@ -1,5 +1,5 @@
 import pytest
-from analytics.interpretation import interpret_exposure
+from analytics.interpretation import interpret_exposure,classify_exposure
 
 def test_interpret_exposure_handles_moderate_strength():
    result = interpret_exposure(
@@ -31,4 +31,27 @@ def test_interpret_exposure_rejects_unsupported_greek():
     assert str(exc_info.value) == (
         "No Interpretation template available for greek 'vega'."
     )
-    
+
+def test_classify_exposure_threshold_boundaries():
+    assert classify_exposure(80,100) == "Very High"
+    assert classify_exposure(60,100) == "High"
+    assert classify_exposure(40,100) == "Moderate"
+    assert classify_exposure(39,100) == "Low"
+
+def test_classify_exposure_zero_is_low():
+    assert classify_exposure(0,100) == "Low"
+
+def test_classify_exposure_rejects_zero_max_exposure():
+
+    with pytest.raises(ValueError) as exc_info:
+        classify_exposure(0,0)
+
+    assert str(exc_info.value) ==(
+        "Cannot classify exposure when maximum exposure is zero."
+    )
+
+def test_classify_exposure_uses_absolute_exposure():
+    assert classify_exposure(-80,100) == "Very High"
+    assert classify_exposure(-60,100) == "High"
+    assert classify_exposure(-40,100) == "Moderate"
+    assert classify_exposure (-39,100) == "Low"

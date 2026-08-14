@@ -3,6 +3,7 @@ calculates exposure for any option chain
 """
 import pandas as pd
 from config.settings import CONTRACT_SIZE, SUPPORTED_GREEKS
+from analytics.interpretation import classify_exposure
 
 def calculate_exposure(df: pd.DataFrame,greek:str, contract_size: int = CONTRACT_SIZE) -> pd.DataFrame:
 
@@ -28,6 +29,22 @@ def calculate_exposure(df: pd.DataFrame,greek:str, contract_size: int = CONTRACT
     )
 
     return result
+
+#classifies the calculated exposures
+def classify_exposures(df):
+    """Classifies exposure strengths for every row"""
+
+    result = df.copy()
+
+    max_exposure = result ["exposure"].max()
+    result ["strength"] = result ["exposure"].apply(
+        lambda exposure : classify_exposure (
+            exposure,
+            max_exposure
+        )
+    )
+    return result
+
 
 #calculate the largest exposure for a given greek
 
@@ -57,3 +74,5 @@ def smallest_exposure(df: pd.DataFrame) -> pd.Series:
     index = df["exposure"].idxmin()
 
     return df.loc[index]
+
+

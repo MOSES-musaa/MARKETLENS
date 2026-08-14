@@ -42,7 +42,13 @@ INTERPRETATION_TEMPLATES = {
 def classify_exposure(exposure: float, max_exposure :float) -> str:
     """
     Classifies the exposure level based on the maximum exposure. """
-    strength = exposure / max_exposure
+
+    if max_exposure == 0:
+        raise ValueError(
+            "Cannot classify exposure when maximum exposure is zero."
+        )
+
+    strength = abs(exposure) / max_exposure
 
     if strength >= 0.80:
         return "Very High"
@@ -72,4 +78,3 @@ def interpret_exposure(greek: str, strength:str, strike: float) -> str:
         strike= str(strike),
         strength=strength
     )
-     

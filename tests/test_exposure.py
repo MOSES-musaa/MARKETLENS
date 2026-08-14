@@ -1,7 +1,7 @@
 
 import pandas as pd
 import pytest
-from analytics.exposure import calculate_exposure, largest_exposure, smallest_exposure
+from analytics.exposure import calculate_exposure, largest_exposure, smallest_exposure,classify_exposures
 
 def test_calculate_delta_exposure():
     """delta should equal :
@@ -174,3 +174,47 @@ def test_largest_exposure_rejects_all_nan_values():
 
         assert str(exc_info.value) == "cannot determine largest exposure."
         " All exposure values are missing."
+
+def test_classify_exposure_assigns_strength_to_each_row():
+    df =pd.DataFrame({
+        "strike":[100,110,120],
+        "exposure":[10000,30000,60000]
+    })
+
+    result = classify_exposures(df)
+    assert result["strength"].tolist()== [
+        "Low",
+        "Moderate",
+        "Very High",
+    ]
+
+def test_classify_exposure_does_not_modify_original_dataframe():
+    df= pd.DataFrame({
+        "strike": [110,120,130],
+        "exposure": [10000,20000,30000]
+    })
+
+    original_columns = df.columns.tolist()
+
+    result = classify_exposures(df)
+
+    assert df.columns.tolist() == original_columns
+    assert "strength" not in df.columns
+    assert "strength" in result.columns
+
+def test_classify_exposure_returns_valid_strength_labels():
+
+    df =pd.DataFrame({
+        "strike": [110,120,130,140],
+        "exposure":[20000,30000,40000,50000]
+    })
+    result = classify_exposures(df)
+    valid_strengths = {
+        "Low",
+        "Moderate",
+        "High",
+        "Very High"
+    }
+    assert set(result["strength"]).issubset(valid_strengths)
+    assert result["strength"].notna().all()
+
