@@ -72,3 +72,43 @@ def test_generate_market_report_rejects_unsupported_greek():
             "Unsupported greek 'vega'."
             "Supported greeks are :delta, gamma"
         )
+
+def test_generate_market_report_returns_complete_report():
+    df= pd.DataFrame({
+        "strike":[110,120,130,140],
+        "gamma":[0.1,0.25,0.15,0.30],
+        "call_oi":[100,200,300,400]
+    })
+
+    result = generate_market_report(df, "gamma")
+
+    assert result ["greek"]=="gamma"
+    assert result ["largest"] is not None
+    assert result ["smallest"] is not None
+    assert result ["strength"] is not None
+    assert result ["interpretation"] is not None
+
+def test_generate_market_report_identifies_the_largest_exposure():
+    df = pd.DataFrame({
+        "strike":[110,120,130,150],
+        "gamma":[0.25,0.30,0.15,0.20],
+        "call_oi":[1000,2000,3000,4000]
+    })
+
+    result= generate_market_report(df,"gamma")
+
+    assert result ["largest"]["strike"]== 150
+    assert result ["largest"]["exposure"]== 80000
+
+def test_generate_market_report_identifies_the_smallest_exposure():
+    df =pd.DataFrame({
+        "strike":[110,120,130],
+        "gamma":[0.10,0.20,0.30],
+        "call_oi":[1000,2000,3000]
+    })
+
+    result = generate_market_report(df,"gamma")
+
+    assert result ["smallest"]["strike"]==110
+    assert result ["smallest"]["exposure"]== 10000
+
